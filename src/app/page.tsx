@@ -1,101 +1,129 @@
+"use client";
+
 import Image from "next/image";
+import xLogotipo from "@/images/logo-white.png";
+import GoogleIcon from "@/icons/GoogleIcon";
+import AppleIcon from "@/icons/AppleIcon";
+import { useEffect, useState } from "react";
+import RegisterForm from "@/components/auth/RegisterForm";
+import LoginForm from "@/components/auth/LoginForm";
+import { useRouter } from "next/navigation";
 
-export default function Home() {
+// Define the type for the session response
+interface Session {
+  user: {
+    name?: string;
+    email?: string;
+    image?: string;
+  } | null;
+  expires: string;
+}
+
+function Home() {
+  const [register, setRegisterStatus] = useState(false);
+  const [login, setLoginStatus] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true); // Nuevo estado para controlar el cargando
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const res = await fetch("/api/session");
+        const data = await res.json();
+        setSession(data.session);
+      } catch (error) {
+        console.error("Error fetching session:", error);
+      }
+    };
+
+    fetchSession();
+  }, []);
+
+  useEffect(() => {
+    if (session) {
+      router.push("/home");
+      router.refresh();
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+  }, [session, router]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-white bg-red">
+        <Image src={xLogotipo} alt="Logo X Clone" width={50} height={50} />
+      </div>
+    );
+  }
+
+  // Si no hay sesión, renderiza la página normal
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <>
+      {register && <RegisterForm onClose={() => setRegisterStatus(false)} />}
+      {login && <LoginForm onClose={() => setLoginStatus(false)} />}
+      <div className={`flex min-h-screen text-white bg-black`}>
+        <div className="flex items-center justify-center w-1/2">
+          <Image src={xLogotipo} alt="Logo X Clone" width={300} height={300} />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        <div className="flex flex-col justify-center w-1/2 p-8">
+          <h1 className="mb-12 text-6xl font-bold">
+            Lo que está <br /> pasando ahora
+          </h1>
+          <h2 className="mb-8 text-3xl font-bold">Únete Hoy</h2>
+
+          <div className="max-w-[330px] space-y-3">
+            <button className="flex items-center justify-center w-full gap-2 px-4 py-2 text-sm font-medium text-black bg-white border border-gray-200 rounded-full">
+              <GoogleIcon className="size-4" /> Registrarse con Google
+            </button>
+            <button className="flex items-center justify-center w-full gap-2 px-4 py-2 text-sm font-medium text-black bg-white border border-gray-200 rounded-full">
+              <AppleIcon className="size-4" /> Registrarse con Apple
+            </button>
+
+            <div className="flex items-center my-4">
+              <div className="flex-grow border-t border-gray-600"></div>
+              <span className="px-4">o</span>
+              <div className="flex-grow border-t border-gray-600"></div>
+            </div>
+
+            <button
+              onClick={() => setRegisterStatus(true)}
+              className="flex items-center justify-center w-full gap-2 px-4 py-2 text-sm font-medium bg-[#1D9BF0] text-white rounded-full"
+            >
+              Crear cuenta
+            </button>
+
+            <p className="text-xs text-gray-500">
+              Al registrarte, aceptas los{" "}
+              <a href="#" className="text-[#1D9BF0]">
+                Términos de servicio
+              </a>{" "}
+              y la{" "}
+              <a href="#" className="text-[#1D9BF0]">
+                Política de privacidad
+              </a>
+              , incluida la política de{" "}
+              <a href="#" className="text-[#1D9BF0]">
+                Uso de Cookies
+              </a>
+              .
+            </p>
+            <br />
+            <div>
+              <p className="mb-4 font-bold">¿Ya tienes una cuenta?</p>
+              <button
+                onClick={() => setLoginStatus(true)}
+                className="w-full py-2 px-4 rounded-full font-medium text-[#1D9BF0] border border-gray-600 hover:bg-[#1D9BF0]/10 transition-colors"
+              >
+                Iniciar sesión
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
+
+export default Home;
