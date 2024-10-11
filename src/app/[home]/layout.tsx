@@ -18,7 +18,7 @@ export default async function HomeLayout({
 
   return (
     <main className="mx-auto my-0 max-w-7xl xl:p-0">
-      <div className="grid min-h-screen grid-cols-[250px_1fr_370px]">
+      <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[250px_1fr_370px]">
         <NavigationLeft user={session?.user} />
         <section>{children}</section>
         <NavigationRight />

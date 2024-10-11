@@ -13,7 +13,7 @@ interface InputsRegister {
 }
 
 interface RegisterFormProps {
-  onClose: () => void; // Tipo de la función onClose
+  onClose: () => void;
 }
 
 function RegisterForm({ onClose }: RegisterFormProps) {

@@ -1,14 +1,22 @@
 "use client";
 
-import Image from "next/image";
-import xLogotipo from "@/images/logo-white.png";
-import { LinksNavigationLeft } from "@/consts/links";
 import Link from "next/link";
 import XIcon from "@/icons/Navigation/XIcon";
-import HomeIcon from "@/icons/Navigation/HomeIcon";
 import { usePathname } from "next/navigation";
-import UserProfile from "./UserProfile";
 import { NavigationLeftProps } from "@/types/userSession";
+import UserProfile from "./UserProfile";
+
+import HomeIcon from "@/icons/Navigation/HomeIcon";
+import SearchIcon from "@/icons/Navigation/SearchIcon";
+import NotificationIcon from "@/icons/Navigation/NotificationIcon";
+import MessageIcon from "@/icons/Navigation/MessageIcon";
+import SavedIcon from "@/icons/Navigation/Saved";
+import CommunityIcon from "@/icons/Navigation/CommunityIcon";
+import OrgsIcon from "@/icons/Navigation/OrgsIcon";
+import ProfileIcon from "@/icons/Navigation/ProfileIcon";
+import OptionsIcon from "@/icons/Navigation/OptionsIcon";
+import GrokIcon from "@/icons/Navigation/GrokIcon";
+import JobsIcon from "@/icons/Navigation/JobsIcon";
 
 function NavigationLeft({ user }: NavigationLeftProps) {
   const path = usePathname();
@@ -26,7 +34,7 @@ function NavigationLeft({ user }: NavigationLeftProps) {
                 href={link.href}
                 key={index}
               >
-                <HomeIcon className="size-8" /> {link.label}
+                {link.icon} {link.label}
               </Link>
             ))}
           </nav>
@@ -40,3 +48,54 @@ function NavigationLeft({ user }: NavigationLeftProps) {
 }
 
 export default NavigationLeft;
+
+export const LinksNavigationLeft = [
+  { label: "Inicio", href: "/home", icon: <HomeIcon className="size-8" /> },
+  {
+    label: "Explorar",
+    href: "/explore",
+    icon: <SearchIcon className="size-8" />,
+  },
+  {
+    label: "Notificaciones",
+    href: "/notifications",
+    icon: <NotificationIcon className="size-8" />,
+  },
+  {
+    label: "Mensajes",
+    href: "/messages",
+    icon: <MessageIcon className="size-8" />,
+  },
+  { label: "Grok", href: "/grok", icon: <GrokIcon className="size-8" /> },
+  {
+    label: "Guardados",
+    href: "/saves",
+    icon: <SavedIcon className="size-8" />,
+  },
+  { label: "Trabajos", href: "/jobs", icon: <JobsIcon className="size-8" /> },
+  {
+    label: "Comunidades",
+    href: "/community",
+    icon: <CommunityIcon className="size-8" />,
+  },
+  {
+    label: "Premium",
+    href: "/premium",
+    icon: <XIcon className="size-6" />,
+  },
+  {
+    label: "Organizaciones",
+    href: "/orgs",
+    icon: <OrgsIcon className="size-8" />,
+  },
+  {
+    label: "Perfil",
+    href: "/profile",
+    icon: <ProfileIcon className="size-8" />,
+  },
+  {
+    label: "Más opciones",
+    href: "/more-options",
+    icon: <OptionsIcon className="size-8" />,
+  },
+];

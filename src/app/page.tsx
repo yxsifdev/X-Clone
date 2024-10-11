@@ -23,7 +23,7 @@ function Home() {
   const [register, setRegisterStatus] = useState(false);
   const [login, setLoginStatus] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true); // Nuevo estado para controlar el cargando
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -58,7 +58,6 @@ function Home() {
     );
   }
 
-  // Si no hay sesión, renderiza la página normal
   return (
     <>
       {register && <RegisterForm onClose={() => setRegisterStatus(false)} />}
